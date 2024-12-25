@@ -1,8 +1,8 @@
 {
-  "version": 10,
+  "version": 3,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 20,
+    "minor": 21,
     "patch": 0
   },
   "configurePresets": [
@@ -60,7 +60,6 @@
       "binaryDir": "${sourceDir}/build",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "$comment": "Use -static flag to avoid dll loading issues when running with wine. Proper release builds should be compiled using msvc.",
         "CMAKE_CXX_FLAGS": "-O2 -static",
 
         "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
