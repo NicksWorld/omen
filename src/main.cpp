@@ -1,4 +1,4 @@
-#include <luajit-2.1/lua.hpp>
+#include <lua.hpp>
 
 int main() {
   lua_State *L = luaL_newstate();
