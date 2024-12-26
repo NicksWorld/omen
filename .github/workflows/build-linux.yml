@@ -26,6 +26,8 @@ jobs:
         restore-keys: ${{ runner.os }}-release-
     - name: Clone Omen
       uses: actions/checkout@v4
+      with:
+        submodules: recursive
     - name: Configure Omen
       env:
         CC: gcc
