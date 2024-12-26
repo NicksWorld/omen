@@ -15,6 +15,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
 
+# External dependencies
+add_subdirectory(external)
+
 # Sources for the engine exectuable, located in src/ for now
 set(ENGINE_SOURCES
   main.cpp
@@ -27,5 +30,4 @@ set_target_properties(
   PROPERTIES
   OUTPUT_NAME omen
 )
-
-target_link_libraries(omen_engine PUBLIC luajit-5.1)
+target_link_libraries(omen_engine PRIVATE LuaJIT)
