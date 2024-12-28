@@ -35,7 +35,7 @@ jobs:
           -B build \
           --preset=linux-release
     - name: Build Omen
-      run: ninja -C build
+      run: ninja -C build install
     - name: Save ccache
       uses: actions/cache/save@v4
       with:
