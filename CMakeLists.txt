@@ -20,6 +20,9 @@ add_subdirectory(external)
 
 # Sources for the engine exectuable, located in src/ for now
 set(ENGINE_SOURCES
+  Application.cpp
+  LoggingApi.cpp
+
   main.cpp
 )
 list(TRANSFORM ENGINE_SOURCES PREPEND "src/")

@@ -1,17 +1,13 @@
-#include <lua.hpp>
+#include <string>
+#include <vector>
 
-int main() {
-  lua_State *L = luaL_newstate();
-  luaL_openlibs(L);
+#include "Application.h"
 
-  const char *script = "print('Hello, Lua!')";
+int main(int argc, char *argv[]) {
+  const std::vector<std::string> args(argv, argv + argc);
 
-  if (luaL_loadstring(L, script) == LUA_OK) {
-    if (lua_pcall(L, 0, 0, 0) == LUA_OK) {
-      lua_pop(L, lua_gettop(L));
-    }
-  }
+  Omen::Application app(args);
+  app.run();
 
-  lua_close(L);
   return 0;
 }
