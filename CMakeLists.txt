@@ -5,6 +5,11 @@ include(ExternalProject)
 # Most of the tooling configuration is contained withing the cmake presets.
 # See cmake-presets(7) for more information
 
+# C++ Standard 20
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(OMEN_VERSION "0.0.0")
 
 project(omen VERSION 0.0.0 LANGUAGES CXX)
