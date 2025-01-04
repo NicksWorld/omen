@@ -13,7 +13,7 @@ namespace Omen {
   /// Provides a basic thread-safe logging API
   class LoggingApi {
   public:
-    LoggingApi([[maybe_unused]] ComponentLocator &loc) {}
+    LoggingApi() = default;
     ~LoggingApi() = default;
 
     /// Log a message to the console with the given log level and message.
