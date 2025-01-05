@@ -11,21 +11,35 @@
 #include <unordered_map>
 
 namespace Omen {
-  /// Structure for managing the initialization of engine components.
-  ///
-  /// Components are created lazily upon first request via a getComponent call.
+  /**
+   * @brief Implementation of the service locator pattern for managing
+   * components.
+   *
+   * The component locator is in charge of managing dependencies between
+   * components. Components may be either default constructible or take a
+   * reference to the ComponentLocator in order to request their dependencies.
+   *
+   * @note The component locator is thread-safe.
+   *
+   * @note Components must be bound via ComponentLocator::bind before
+   * being requested by ComponentLocator::getComponent
+   */
   class ComponentLocator {
   public:
     ComponentLocator() = default;
     ~ComponentLocator() = default;
 
-    /// Make Component available as a component.
-    template <typename Component> void bind() {
-      this->bind<Component, Component>();
-    }
-
-    /// Make Interface available as a component, via the implementation Impl.
-    template <typename Interface, typename Impl> void bind() {
+    /**
+     * Register a component to be accessible via
+     * ComponentLocator::getComponent
+     *
+     * @tparam Interface The interface used to interact with the component.
+     * @tparam Impl The implementation of the interface to be used. This is the
+     * same as the Interface unless specified.
+     *
+     * @note The component is lazily constructed upon first request.
+     */
+    template <typename Interface, typename Impl = Interface> void bind() {
       const std::scoped_lock lck(m_lock);
       auto idx = std::type_index(typeid(Interface));
 
@@ -39,9 +53,17 @@ namespace Omen {
       m_componentFactories.insert({idx, createFactory<Impl>()});
     }
 
-    /// Obtain a shared_ptr to the specified Interface.
-    ///
-    /// Creates the component if not already initialized.
+    /**
+     * Obtain a reference to the specified component Interface.
+     *
+     * References are guarenteed to refer to the same instance each time
+     * requested.
+     *
+     * @tparam Interface The component interface that is requested.
+     *
+     * @note To make an interface accessible, it must first be bound via
+     * ComponentLocator::bind.
+     */
     template <typename Interface> std::shared_ptr<Interface> getComponent() {
       const std::scoped_lock lck(m_lock);
       auto idx = std::type_index(typeid(Interface));
@@ -58,7 +80,7 @@ namespace Omen {
     }
 
   private:
-    // Creates a factory for the Component
+    // Creates a factory function for the given component
     template <typename Impl>
     std::function<std::shared_ptr<void>(ComponentLocator &)> createFactory() {
       if constexpr (std::is_constructible_v<Impl, ComponentLocator &>) {
