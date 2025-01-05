@@ -19,27 +19,13 @@ namespace Omen {
     ComponentLocator() = default;
     ~ComponentLocator() = default;
 
-    // Concept determining if ctor(ComponentLocator&) is available.
-    template <typename Interface>
-    using construct_use_locator =
-        std::is_constructible<Interface, ComponentLocator &>;
-    // Concept determining if ctor() is available.
-    template <typename Interface>
-    using construct_use_default = std::is_constructible<Interface>;
-
     /// Make Component available as a component.
     template <typename Component> void bind() {
-      // There is no seperate interface, so they are the same.
       this->bind<Component, Component>();
     }
 
     /// Make Interface available as a component, via the implementation Impl.
     template <typename Interface, typename Impl> void bind() {
-      static_assert(construct_use_default<Interface>::value ||
-                        construct_use_locator<Interface>::value,
-                    "Cannot bind component, Impl is not default constructible "
-                    "or constructible with ComponentLocator&");
-
       const std::scoped_lock lck(m_lock);
       auto idx = std::type_index(typeid(Interface));
 
@@ -74,20 +60,18 @@ namespace Omen {
   private:
     // Creates a factory for the Component
     template <typename Impl>
-    std::function<std::shared_ptr<void>(ComponentLocator &)> createFactory()
-      requires construct_use_locator<Impl>::value
-    {
-      return [](ComponentLocator &loc) { return std::make_shared<Impl>(loc); };
-    }
-
-    template <typename Impl>
-    std::function<std::shared_ptr<void>(ComponentLocator &)> createFactory()
-      requires construct_use_default<Impl>::value &&
-               (!construct_use_locator<Impl>::value)
-    {
-      return []([[maybe_unused]] ComponentLocator &loc) {
-        return std::make_shared<Impl>();
-      };
+    std::function<std::shared_ptr<void>(ComponentLocator &)> createFactory() {
+      if constexpr (std::is_constructible_v<Impl, ComponentLocator &>) {
+        return
+            [](ComponentLocator &loc) { return std::make_shared<Impl>(loc); };
+      } else if constexpr (std::is_constructible_v<Impl>) {
+        return []([[maybe_unused]] ComponentLocator &loc) {
+          return std::make_shared<Impl>();
+        };
+      } else {
+        static_assert(false, "Component impl is not constructible with "
+                             "ComponentLocator& or default constructible.");
+      }
     }
 
     /// Constructs a Component that takes ComponentLocator& in the constructor.
