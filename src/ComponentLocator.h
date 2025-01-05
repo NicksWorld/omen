@@ -44,13 +44,14 @@ namespace Omen {
       auto idx = std::type_index(typeid(Interface));
 
       // Ensure another implementation isn't already registered
-      if (m_componentFactories.contains(idx)) {
+      if (m_components.contains(idx)) {
         throw std::runtime_error(
             std::format("An implementation for the component {} already exists",
                         typeid(Interface).name()));
       }
 
-      m_componentFactories.insert({idx, createFactory<Impl>()});
+      m_components.insert(
+          {idx, {createFactory<Impl>(), std::shared_ptr<void>()}});
     }
 
     /**
@@ -67,20 +68,27 @@ namespace Omen {
     template <typename Interface> std::shared_ptr<Interface> getComponent() {
       const std::scoped_lock lck(m_lock);
       auto idx = std::type_index(typeid(Interface));
-      auto interface = m_components.find(idx);
-      if (interface != m_components.end()) {
-        // Interface is already initialized
-        return std::static_pointer_cast<Interface>(interface->second);
-      }
 
-      // Construct the interface
-      auto newInterface = createComponent<Interface>();
-      m_components.insert({idx, newInterface});
-      return newInterface;
+      auto interface = m_components.find(idx);
+
+      if (interface == m_components.end()) {
+        // Interface has no registered factory or instance
+        throw std::runtime_error(
+            std::format("No bound implementation to produce component {}",
+                        typeid(Interface).name()));
+      }
+      if (interface != m_components.end() && interface->second.instance) {
+        // Interface is already initialized
+        return std::static_pointer_cast<Interface>(interface->second.instance);
+      }
+      // Interface factory exists, but has not yet been constructed.
+      auto newInterface = interface->second.factory(*this);
+      interface->second.instance = newInterface;
+      return std::static_pointer_cast<Interface>(newInterface);
     }
 
   private:
-    // Creates a factory function for the given component
+    // Creates a factory function for the given component.
     template <typename Impl>
     std::function<std::shared_ptr<void>(ComponentLocator &)> createFactory() {
       if constexpr (std::is_constructible_v<Impl, ComponentLocator &>) {
@@ -96,27 +104,15 @@ namespace Omen {
       }
     }
 
-    /// Constructs a Component that takes ComponentLocator& in the constructor.
-    template <typename Interface> std::shared_ptr<Interface> createComponent() {
-      auto interfaceFactory =
-          m_componentFactories.find(std::type_index(typeid(Interface)));
+    struct Component {
+      // Factory method for constructing the component.
+      std::function<std::shared_ptr<void>(ComponentLocator &)> factory;
+      // Pointer to the component, nullptr if not yet constructed.
+      std::shared_ptr<void> instance;
+    };
 
-      // Ensure a factory is available to produce the interface
-      if (interfaceFactory == m_componentFactories.end()) {
-        throw std::runtime_error(
-            std::format("No bound implementation to produce component {}",
-                        typeid(Interface).name()));
-      }
-
-      return std::static_pointer_cast<Interface>(
-          interfaceFactory->second(*this));
-    }
-
-    // Maps storing the components and the functions used to create them.
-    std::unordered_map<std::type_index, std::shared_ptr<void>> m_components;
-    std::unordered_map<std::type_index,
-                       std::function<std::shared_ptr<void>(ComponentLocator &)>>
-        m_componentFactories;
+    // Unified map for factories and constructed components
+    std::unordered_map<std::type_index, Component> m_components;
 
     // Used to protect the internals from being read or modified concurrently.
     // A recursive mutex is used as the locator may be used during the
