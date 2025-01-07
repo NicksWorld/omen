@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cassert>
+#include <deque>
 #include <format>
 #include <functional>
 #include <memory>
@@ -82,8 +83,18 @@ namespace Omen {
         return std::static_pointer_cast<Interface>(interface->second.instance);
       }
       // Interface factory exists, but has not yet been constructed.
+
+      // Determine if the interface is being constructed actively.
+      // This is caused by a cyclic dependency and would cause an infinte loop.
+      auto firstOccurance = std::find(m_initializingStack.begin(), m_initializingStack.end(), idx);
+      if (firstOccurance != m_initializingStack.end()) {
+        throw std::runtime_error("Cyclic dependency detected");
+      }
+
+      m_initializingStack.push_back(idx);
       auto newInterface = interface->second.factory(*this);
       interface->second.instance = newInterface;
+      m_initializingStack.pop_back();
       return std::static_pointer_cast<Interface>(newInterface);
     }
 
@@ -113,6 +124,9 @@ namespace Omen {
 
     // Unified map for factories and constructed components
     std::unordered_map<std::type_index, Component> m_components;
+
+    // Stack used for detecting when a dependency cycle is encountered.
+    std::deque<std::type_index> m_initializingStack;
 
     // Used to protect the internals from being read or modified concurrently.
     // A recursive mutex is used as the locator may be used during the
