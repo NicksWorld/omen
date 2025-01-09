@@ -60,7 +60,7 @@ namespace Omen {
     /**
      * Obtain a reference to the specified component Interface.
      *
-     * References are guarenteed to refer to the same instance each time
+     * References are guaranteed to refer to the same instance each time
      * requested.
      *
      * @tparam Interface The component interface that is requested.
@@ -90,10 +90,10 @@ namespace Omen {
       // Interface factory exists, but has not yet been constructed.
 
       // Determine if the interface is being constructed actively.
-      // This is caused by a cyclic dependency and would cause an infinte loop.
-      auto firstOccurance = std::find(m_initializingStack.begin(),
+      // This is caused by a cyclic dependency and would cause an infinite loop.
+      auto firstOccurence = std::find(m_initializingStack.begin(),
                                       m_initializingStack.end(), idx);
-      if (firstOccurance != m_initializingStack.end()) {
+      if (firstOccurence != m_initializingStack.end()) {
         throw std::runtime_error("Cyclic dependency detected");
       }
 
@@ -113,7 +113,7 @@ namespace Omen {
     /**
      * Clears all initialized components and bindings.
      *
-     * @note All components must be cleared to maintain the guarentee of only
+     * @note All components must be cleared to maintain the guarantee of only
      * one instance being shared by all components.
      *
      * @throws logic_error if called from the initialization of a component.
