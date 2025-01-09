@@ -110,6 +110,23 @@ namespace Omen {
       }
     }
 
+    /**
+     * Clears all initialized components and bindings.
+     *
+     * @note All components must be cleared to maintain the guarentee of only
+     * one instance being shared by all components.
+     *
+     * @throws logic_error if called from the initialization of a component.
+     */
+    void clear() {
+      const std::scoped_lock lck(m_lock);
+      if (!m_initializingStack.empty()) {
+        throw std::logic_error(
+            "ComponentLocator::clear called from component initialization.");
+      }
+      m_components.clear();
+    }
+
   private:
     // Creates a factory function for the given component.
     template <typename Impl>
