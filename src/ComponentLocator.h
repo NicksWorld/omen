@@ -69,6 +69,7 @@ namespace Omen {
      * ComponentLocator::bind.
      *
      * @throws runtime_error upon detection of a dependency cycle.
+     * @throws ... if initializing the component results in an exception.
      */
     template <typename Interface> std::shared_ptr<Interface> getComponent() {
       const std::scoped_lock lck(m_lock);
@@ -97,10 +98,16 @@ namespace Omen {
       }
 
       m_initializingStack.push_back(idx);
-      auto newInterface = interface->second.factory(*this);
-      interface->second.instance = newInterface;
-      m_initializingStack.pop_back();
-      return std::static_pointer_cast<Interface>(newInterface);
+      try {
+        // The factory may throw an exception from a user-defined constructor.
+        auto newInterface = interface->second.factory(*this);
+        m_initializingStack.pop_back();
+        return std::static_pointer_cast<Interface>(newInterface);
+      } catch (...) {
+        // Maintain a usable state so the caller can recover gracefully.
+        m_initializingStack.pop_back();
+        throw;
+      }
     }
 
   private:
