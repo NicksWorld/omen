@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cassert>
+#include <algorithm>
 #include <deque>
 #include <format>
 #include <functional>
@@ -39,6 +39,8 @@ namespace Omen {
      * same as the Interface unless specified.
      *
      * @note The component is lazily constructed upon first request.
+     *
+     * @throws runtime_error upon duplicate registrations of an interface.
      */
     template <typename Interface, typename Impl = Interface> void bind() {
       const std::scoped_lock lck(m_lock);
@@ -65,6 +67,8 @@ namespace Omen {
      *
      * @note To make an interface accessible, it must first be bound via
      * ComponentLocator::bind.
+     *
+     * @throws runtime_error upon detection of a dependency cycle.
      */
     template <typename Interface> std::shared_ptr<Interface> getComponent() {
       const std::scoped_lock lck(m_lock);
@@ -86,7 +90,8 @@ namespace Omen {
 
       // Determine if the interface is being constructed actively.
       // This is caused by a cyclic dependency and would cause an infinte loop.
-      auto firstOccurance = std::find(m_initializingStack.begin(), m_initializingStack.end(), idx);
+      auto firstOccurance = std::find(m_initializingStack.begin(),
+                                      m_initializingStack.end(), idx);
       if (firstOccurance != m_initializingStack.end()) {
         throw std::runtime_error("Cyclic dependency detected");
       }
