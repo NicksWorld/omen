@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_view>
 #include <vector>
 
 #include "ComponentLocator.h"
@@ -15,14 +15,14 @@ namespace Omen {
     Application(Application &&) = delete;
 
     /// Create and prepare the application for initialization.
-    Application(const std::vector<std::string> &argv) : m_argv(argv) {}
+    Application(const std::vector<std::string_view> &argv) : m_argv(argv) {}
     ~Application() = default;
 
     /// Enters the main application loop. Returns on app exit.
     void run();
 
     /// Returns the command-line arguments given to the program.
-    const std::vector<std::string> &argv() const { return m_argv; }
+    const std::vector<std::string_view> &argv() const { return m_argv; }
 
   private:
     /// Initialize core application services. Returns true on success.
@@ -30,7 +30,7 @@ namespace Omen {
     /// Shutdown core application services.
     void shutdown();
 
-    const std::vector<std::string> m_argv;
+    const std::vector<std::string_view> m_argv;
     Omen::ComponentLocator m_components;
   };
 } // namespace Omen
