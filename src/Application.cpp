@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include "ComponentLocator.h"
 #include "LoggingApi.h"
 
 namespace Omen {
