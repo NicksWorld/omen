@@ -58,6 +58,46 @@ namespace Omen {
     }
 
     /**
+     * Insert an already initialized component to be accessible via
+     * ComponentLocator::getComponent
+     *
+     * @tparam Interface The interface used to interact with the component.
+     *
+     * @throws runtime_error upon duplicate registrations/installation of an
+     * interface.
+     * @throws invalid_argument if component shared_ptr is empty
+     */
+    template <typename Interface>
+    void install(std::shared_ptr<Interface> component) {
+      const std::scoped_lock lck(m_lock);
+      auto idx = std::type_index(typeid(Interface));
+
+      // Ensure the shared_ptr contains a component
+      if (!component) {
+        throw std::invalid_argument(
+            "Attempted to install component with empty shared_ptr");
+      }
+
+      // Ensure no other implementation had been registered
+      if (m_components.contains(idx)) {
+        throw std::runtime_error(
+            std::format("An implementation for the component {} already exists",
+                        typeid(Interface).name()));
+      }
+
+      Component componentEntry{
+          []([[maybe_unused]] ComponentLocator &loc) {
+            // This should never be reached as clearing clears the whole entry
+            throw std::runtime_error(
+                "Attempted to call a factory for an installed component");
+            return std::shared_ptr<Interface>();
+          },
+          component};
+
+      m_components.insert({idx, componentEntry});
+    }
+
+    /**
      * Obtain a reference to the specified component Interface.
      *
      * References are guaranteed to refer to the same instance each time
