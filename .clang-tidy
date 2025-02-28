@@ -1,0 +1,8 @@
+Checks: >
+  bugprone-*
+  concurrency-*
+  performance-*
+  portability-*
+  readability-*
+  clang-analyzer-*
+  misc-*
