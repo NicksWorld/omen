@@ -5,11 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Enable additional warnings
+# Enable additional warnings and disable exceptions
 if (UNIX)
-  set(OMEN_CXX_FLAGS "-Werror" "-Wall" "-Wextra" "-Wshadow" "-Wconversion" "-pedantic" "-Wold-style-cast" "-Woverloaded-virtual" "-Wimplicit-fallthrough")
+  set(OMEN_CXX_FLAGS "-Werror" "-Wall" "-Wextra" "-Wshadow" "-Wconversion" "-pedantic" "-Wold-style-cast" "-Woverloaded-virtual" "-Wimplicit-fallthrough" "-fno-exceptions")
 elseif (WIN32)
-  set(OMEN_CXX_FLAGS "/WX" "/W3")
+  set(OMEN_CXX_FLAGS "/WX" "/W4" "/EHsc")
 else()
   set(OMEN_CXX_FLAGS "")
 endif()
@@ -34,6 +34,7 @@ project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 set(ENGINE_SOURCES
   main.cpp
+  settings.cpp
 )
 list(TRANSFORM ENGINE_SOURCES PREPEND "src/")
 
@@ -44,4 +45,8 @@ set_target_properties(
   OUTPUT_NAME omen
 )
 target_link_libraries(omen_engine PRIVATE Luau.Compiler Luau.VM)
+
+target_link_libraries(omen_engine PRIVATE tomlplusplus::tomlplusplus)
+add_compile_definitions(omen_engine PRIVATE TOML_EXCEPTIONS=0)
+
 target_compile_options(omen_engine PRIVATE ${OMEN_CXX_FLAGS})
