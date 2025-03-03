@@ -13,6 +13,8 @@ jobs:
           choco install -y ccache ninja
       - name: Get LocalAppData Directory
         run: echo ("LOCALAPPDATA_DIR=" + $env:LOCALAPPDATA) >> $env:GITHUB_ENV
+      - name: Setup MSVC Environment
+        uses: ilammy/msvc-dev-cmd@v1
       - name: Restore ccache
         uses: actions/cache/restore@v4
         with:
