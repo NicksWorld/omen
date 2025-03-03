@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Install build dependencies
         run: |
-          choco install -y ccache
+          choco install -y ccache ninja
       - name: Get LocalAppData Directory
         run: echo ("LOCALAPPDATA_DIR=" + $env:LOCALAPPDATA) >> $env:GITHUB_ENV
       - name: Restore ccache
@@ -28,6 +28,7 @@ jobs:
           cmake `
             -S . `
             -B build `
+            -G Ninja `
             --preset=windows-release
       - name: Build Omen
         run: cmake --build build
