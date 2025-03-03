@@ -5,11 +5,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Enable additional warnings and disable exceptions
+# Enable additional warnings
 if (UNIX)
-  set(OMEN_CXX_FLAGS "-Werror" "-Wall" "-Wextra" "-Wshadow" "-Wconversion" "-pedantic" "-Wold-style-cast" "-Woverloaded-virtual" "-Wimplicit-fallthrough" "-fno-exceptions")
+  set(OMEN_CXX_FLAGS "-Werror" "-Wall" "-Wextra" "-Wshadow" "-Wconversion" "-pedantic" "-Wold-style-cast" "-Woverloaded-virtual" "-Wimplicit-fallthrough")
 elseif (WIN32)
-  set(OMEN_CXX_FLAGS "/WX" "/W4" "/EHsc")
+  set(OMEN_CXX_FLAGS "/WX" "/W4")
 else()
   set(OMEN_CXX_FLAGS "")
 endif()
