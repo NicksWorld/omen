@@ -33,6 +33,7 @@ add_subdirectory(external)
 project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 set(ENGINE_SOURCES
+  application.cpp
   main.cpp
   settings.cpp
 )
