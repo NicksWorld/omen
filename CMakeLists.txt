@@ -32,4 +32,5 @@ add_subdirectory(external)
 
 project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
+add_subdirectory(common)
 add_subdirectory(engine)
