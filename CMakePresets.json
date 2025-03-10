@@ -30,7 +30,8 @@
       "description": "Development build with debug information",
       "inherits": ["linux"],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "OMEN_TEST": "ON"
       }
     },
     {
@@ -107,7 +108,8 @@
       "displayName": "Windows Debug",
       "inherits": ["windows"],
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "OMEN_TEST": "ON"
       }
     }
   ]

@@ -27,9 +27,12 @@ jobs:
           cmake \
             -S . \
             -B build \
+            -DOMEN_TEST=ON \
             --preset=linux-release
       - name: Build Omen
         run: ninja -C build
+      - name: Test Omen
+        run: build/out/omen_test
       - name: Save ccache
         uses: actions/cache/save@v4
         with:

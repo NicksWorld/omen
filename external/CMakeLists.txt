@@ -1,2 +1,5 @@
 include(luau.cmake)
 include(tomlplusplus.cmake)
+if (OMEN_TEST)
+  include(googletest.cmake)
+endif()

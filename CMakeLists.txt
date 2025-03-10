@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 
+option(OMEN_TEST "Enable compilation of tests" OFF)
+
 # Require C++20
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -34,3 +36,7 @@ project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 add_subdirectory(common)
 add_subdirectory(engine)
+
+if (OMEN_TEST)
+  add_subdirectory(test)
+endif()

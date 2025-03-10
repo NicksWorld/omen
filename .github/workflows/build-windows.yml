@@ -30,10 +30,13 @@ jobs:
           cmake `
             -S . `
             -B build `
+            -DOMEN_TEST=ON `
             -G Ninja `
             --preset=windows-release
       - name: Build Omen
         run: cmake --build build
+      - name: Test Omen
+        run: build/out/omen_test.exe
       - name: Save ccache
         uses: actions/cache/save@v4
         with:
