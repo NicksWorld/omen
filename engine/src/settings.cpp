@@ -2,6 +2,7 @@
 
 #include <filesystem>
 #include <fstream>
+#include <istream>
 #include <memory>
 
 #include <toml++/toml.hpp>
@@ -22,13 +23,18 @@ SettingsResult<std::unique_ptr<EngineSettings>> EngineSettings::load() {
   // Open the file
   std::ifstream toml_stream(toml_path);
   if (toml_stream.fail()) {
-    return "Failed to open file";
+    return SettingsError::File;
   }
 
+  return from_toml(toml_stream);
+}
+
+SettingsResult<std::unique_ptr<EngineSettings>>
+EngineSettings::from_toml(std::istream &stream) {
   // Parse the file
-  toml::parse_result settings_raw = toml::parse(toml_stream);
+  toml::parse_result settings_raw = toml::parse(stream);
   if (!settings_raw) {
-    return "Failed to parse toml";
+    return SettingsError::Toml;
   }
 
   std::unique_ptr<EngineSettings> engine_settings{new EngineSettings()};
