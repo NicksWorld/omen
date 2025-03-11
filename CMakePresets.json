@@ -44,40 +44,6 @@
       }
     },
     {
-      "name": "windows-xbuild",
-      "displayName": "Windows XBuild",
-      "description": "Crosscompiled windows build",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build",
-      "cacheVariables": {
-        "CMAKE_SYSTEM_NAME": "Windows",
-        "CMAKE_C_COMPILER": "x86_64-w64-mingw32-gcc",
-        "CMAKE_CXX_COMPILER": "x86_64-w64-mingw32-g++",
-        "CMAKE_CXX_FLAGS": "-static"
-      },
-      "condition": {
-        "type": "equals",
-        "lhs": "${hostSystemName}",
-        "rhs": "Linux"
-      }
-    },
-    {
-      "name": "windows-xbuild-debug",
-      "displayName": "Windows XBuild Debug",
-      "inherits": ["windows-xbuild"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
-      }
-    },
-    {
-      "name": "windows-xbuild-release",
-      "displayName": "Windows XBuild Release",
-      "inherits": ["windows-xbuild"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
       "name": "windows",
       "displayName": "Windows",
       "hidden": true,
