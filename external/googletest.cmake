@@ -1,5 +1,6 @@
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 set(INSTALL_GTEST OFF)
+set(BUILD_SHARED_LIBS ON)
 
 add_subdirectory(googletest)
