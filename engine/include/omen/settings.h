@@ -2,7 +2,6 @@
 
 #include <istream>
 #include <memory>
-#include <string_view>
 #include <variant>
 
 namespace omen {
@@ -18,10 +17,11 @@ private:
 
 public:
   ~EngineSettings() = default;
+
   /// Name for the application
-  std::string_view app_name = "Omen Application";
+  const std::string& get_app_name() { return app_name; }
   /// Path of the core script which is used as the Lua entrypoint
-  std::string_view boot_script = "core/boot/boot.lua";
+  const std::string& get_boot_script() { return boot_script; }
 
   /// Loads settings from the current working directory
   static SettingsResult<std::unique_ptr<EngineSettings>> load();
@@ -29,5 +29,9 @@ public:
   /// Initializes settings based on toml values
   static SettingsResult<std::unique_ptr<EngineSettings>>
   from_toml(std::istream &stream);
+
+private:
+  std::string app_name = "Omen Application";
+  std::string boot_script = "core/boot/boot.lua";
 };
 }
