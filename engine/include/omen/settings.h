@@ -20,9 +20,9 @@ public:
   ~EngineSettings() = default;
 
   /// Name for the application
-  const std::string_view get_app_name() { return app_name; }
+  const std::string_view get_app_name() const { return app_name; }
   /// Path of the core script which is used as the Lua entrypoint
-  const std::string_view get_boot_script() { return boot_script; }
+  const std::string_view get_boot_script() const { return boot_script; }
 
   /// Loads settings from the current working directory
   static SettingsResult<std::unique_ptr<EngineSettings>> load();

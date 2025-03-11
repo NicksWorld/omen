@@ -22,13 +22,13 @@ public:
   explicit HashId(const void *data, std::size_t size)
       : hash(hash_value(data, size)) {};
 
-  bool operator==(const HashId &other) { return hash == other.hash; }
-  bool operator!=(const HashId &other) { return hash != other.hash; }
+  bool operator==(const HashId &other) const { return hash == other.hash; }
+  bool operator!=(const HashId &other) const { return hash != other.hash; }
 
   /// Get the raw hash value
-  uint64_t get() { return hash; }
+  uint64_t get() const { return hash; }
 
 private:
-  uint64_t hash;
+  const uint64_t hash;
 };
 }

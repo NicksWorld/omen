@@ -16,9 +16,9 @@ public:
   static std::unique_ptr<Application> init(std::unique_ptr<EngineSettings>);
 
   /// Get the engine settings used by the application
-  const EngineSettings *settings() { return engine_settings.get(); }
+  const EngineSettings *settings() const { return engine_settings.get(); }
 
 private:
-  std::unique_ptr<EngineSettings> engine_settings;
+  const std::unique_ptr<EngineSettings> engine_settings;
 };
 }
