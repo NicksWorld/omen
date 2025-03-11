@@ -1,8 +1,8 @@
-#include "application.h"
+#include "omen/application.h"
 
 #include <memory>
 
-#include "settings.h"
+#include "omen/settings.h"
 
 using namespace omen;
 

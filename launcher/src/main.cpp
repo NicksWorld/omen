@@ -3,8 +3,8 @@
 #include <string>
 #include <variant>
 
-#include "application.h"
-#include "settings.h"
+#include <omen/application.h>
+#include <omen/settings.h>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[]) {
   auto engine_settings_res = omen::EngineSettings::load();

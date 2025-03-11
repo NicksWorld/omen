@@ -36,6 +36,7 @@ project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 add_subdirectory(common)
 add_subdirectory(engine)
+add_subdirectory(launcher)
 
 if (OMEN_TEST)
   add_subdirectory(test)
