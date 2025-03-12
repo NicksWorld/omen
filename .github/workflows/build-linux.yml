@@ -28,11 +28,12 @@ jobs:
             -S . \
             -B build \
             -DOMEN_TEST=ON \
+            -DCMAKE_INSTALL_PREFIX=output \
             --preset=linux-release
       - name: Build Omen
-        run: ninja -C build
+        run: ninja install -C build
       - name: Test Omen
-        run: build/out/omen_test
+        run: output/test/omen_test
       - name: Save ccache
         uses: actions/cache/save@v4
         with:

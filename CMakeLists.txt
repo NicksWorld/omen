@@ -16,6 +16,9 @@ else()
   set(OMEN_CXX_FLAGS "")
 endif()
 
+# Search in the executable origin directory for shared objects
+list(APPEND CMAKE_INSTALL_RPATH "\${ORIGIN}")
+
 set(OMEN_VERSION "0.0.0")
 
 find_program(CCACHE_EXECUTABLE "ccache")
@@ -25,14 +28,9 @@ if(CCACHE_EXECUTABLE)
   set(CMAKE_C_COMPILER_LAUNCHER "${CCACHE_EXECUTABLE}")
 endif()
 
-set(OMEN_OUTPUT_DIR "$<1:${CMAKE_BINARY_DIR}/out>")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${OMEN_OUTPUT_DIR})
+project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 add_subdirectory(external)
-
-project(omen VERSION ${OMEN_VERSION} LANGUAGES CXX)
 
 add_subdirectory(common)
 add_subdirectory(engine)

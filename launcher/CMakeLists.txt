@@ -12,3 +12,6 @@ set_target_properties(
 )
 target_link_libraries(omen_launcher PRIVATE omen_engine)
 target_compile_options(omen_launcher PRIVATE ${OMEN_CXX_FLAGS})
+
+# Install main executable and dependencies
+install(TARGETS omen_launcher DESTINATION .)
