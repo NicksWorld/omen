@@ -28,6 +28,7 @@ jobs:
             -S . \
             -B build \
             -DOMEN_TEST=ON \
+            -DCMAKE_COLOR_DIAGNOSTICS=ON \
             -DCMAKE_INSTALL_PREFIX=output \
             --preset=linux-release
       - name: Build Omen
@@ -37,11 +38,11 @@ jobs:
           ccache --show-stats --verbose
           ccache --max-size 300MB
           ccache --zero-stats
-      - name: Test Omen
-        run: output/test/omen_test
       - name: Save ccache
         uses: actions/cache/save@v4
         with:
           path: |
             ~/.cache/ccache
           key: ${{ runner.os }}-release-${{ github.sha }}
+      - name: Test Omen
+        run: output/test/omen_test --gtest_color=yes

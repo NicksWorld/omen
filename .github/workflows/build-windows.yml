@@ -31,6 +31,7 @@ jobs:
             -S . `
             -B build `
             -DOMEN_TEST=ON `
+            -DCMAKE_COLOR_DIAGNOSTICS=ON `
             -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded `
             -DCMAKE_POLICY_CMP0141=NEW `
             -DCMAKE_INSTALL_PREFIX=output `
@@ -50,4 +51,4 @@ jobs:
             ${{ env.LOCALAPPDATA_DIR }}/ccache
           key: ${{ runner.os }}-release-${{ github.sha }}
       - name: Test Omen
-        run: output/test/omen_test.exe
+        run: output/test/omen_test.exe --gtest_color=yes
