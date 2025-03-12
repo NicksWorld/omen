@@ -31,16 +31,23 @@ jobs:
             -S . `
             -B build `
             -DOMEN_TEST=ON `
+            -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded `
+            -DCMAKE_POLICY_CMP0141=NEW `
             -DCMAKE_INSTALL_PREFIX=output `
             -G Ninja `
             --preset=windows-release
       - name: Build Omen
         run: ninja install -C build
-      - name: Test Omen
-        run: output/test/omen_test.exe
+      - name: Finalize ccache
+        run: |
+          ccache --show-stats --verbose
+          ccache --max-size 300MB
+          ccache --zero-stats
       - name: Save ccache
         uses: actions/cache/save@v4
         with:
           path: |
             ${{ env.LOCALAPPDATA_DIR }}/ccache
           key: ${{ runner.os }}-release-${{ github.sha }}
+      - name: Test Omen
+        run: output/test/omen_test.exe

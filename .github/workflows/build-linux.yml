@@ -32,6 +32,11 @@ jobs:
             --preset=linux-release
       - name: Build Omen
         run: ninja install -C build
+      - name: Finalize ccache
+        run: |
+          ccache --show-stats --verbose
+          ccache --max-size 300MB
+          ccache --zero-stats
       - name: Test Omen
         run: output/test/omen_test
       - name: Save ccache
