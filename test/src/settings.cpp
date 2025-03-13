@@ -27,9 +27,9 @@ TEST(EngineSettings, invalidToml) {
 TEST(EngineSettings, validToml) {
   std::stringstream valid(
       "app_name = \"TEST_APP_NAME\"\nboot_script = \"TEST_BOOT_SCRIPT\"");
-  auto settings = EngineSettings::from_toml(valid);
-  ASSERT_TRUE(std::holds_alternative<std::unique_ptr<EngineSettings>>(settings));
-  auto s = std::move(std::get<0>(settings));
-  EXPECT_EQ(s->get_app_name(), "TEST_APP_NAME");
-  EXPECT_EQ(s->get_boot_script(), "TEST_BOOT_SCRIPT");
+  auto settings_res = EngineSettings::from_toml(valid);
+  ASSERT_TRUE(std::holds_alternative<std::unique_ptr<EngineSettings>>(settings_res));
+  auto settings = std::move(std::get<0>(settings_res));
+  EXPECT_EQ(settings->get_app_name(), "TEST_APP_NAME");
+  EXPECT_EQ(settings->get_boot_script(), "TEST_BOOT_SCRIPT");
 }

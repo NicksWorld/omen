@@ -9,6 +9,7 @@
 
 using namespace omen;
 
+namespace {
 // If node contains a value of the specified type, loads the value into field.
 template <typename T>
 void populate_setting(const toml::node_view<toml::node> &node, T &field) {
@@ -16,9 +17,10 @@ void populate_setting(const toml::node_view<toml::node> &node, T &field) {
     field = *res;
   }
 }
+}
 
 SettingsResult<std::unique_ptr<EngineSettings>> EngineSettings::load() {
-  std::filesystem::path toml_path("engine.toml");
+  const std::filesystem::path toml_path("engine.toml");
 
   // Open the file
   std::ifstream toml_stream(toml_path);

@@ -1,8 +1,10 @@
 Checks: >
-  bugprone-*
-  concurrency-*
-  performance-*
-  portability-*
-  readability-*
-  clang-analyzer-*
-  misc-*
+  bugprone-*,
+  concurrency-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  clang-analyzer-*,
+  misc-*,
+  -readability-uppercase-literal-suffix,
+  -misc-include-cleaner
