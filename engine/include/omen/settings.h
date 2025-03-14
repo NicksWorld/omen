@@ -2,7 +2,6 @@
 
 #include <istream>
 #include <memory>
-#include <string_view>
 #include <variant>
 
 namespace omen {
@@ -20,9 +19,9 @@ public:
   ~EngineSettings() = default;
 
   /// Name for the application
-  const std::string_view get_app_name() const { return app_name; }
+  const std::string &get_app_name() const { return app_name; }
   /// Path of the core script which is used as the Lua entrypoint
-  const std::string_view get_boot_script() const { return boot_script; }
+  const std::string &get_boot_script() const { return boot_script; }
 
   /// Loads settings from the current working directory
   static SettingsResult<std::unique_ptr<EngineSettings>> load();
