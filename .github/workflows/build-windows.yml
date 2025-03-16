@@ -8,9 +8,14 @@ jobs:
     runs-on: windows-2022
 
     steps:
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
       - name: Install build dependencies
         run: |
-          choco install -y ccache ninja
+          choco install -y ccache
+          python -m pip install meson ninja
       - name: Get LocalAppData Directory
         run: echo ("LOCALAPPDATA_DIR=" + $env:LOCALAPPDATA) >> $env:GITHUB_ENV
       - name: Setup MSVC Environment
@@ -27,18 +32,15 @@ jobs:
           submodules: recursive
       - name: Configure Omen
         run: |
-          cmake `
-            -S . `
-            -B build `
-            -DOMEN_TEST=ON `
-            -DCMAKE_COLOR_DIAGNOSTICS=ON `
-            -DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded `
-            -DCMAKE_POLICY_CMP0141=NEW `
-            -DCMAKE_INSTALL_PREFIX=output `
-            -G Ninja `
-            --preset=windows-release
+          meson setup `
+            -Dtests=true `
+            -Dpedantic=true `
+            --werror `
+            --warnlevel=3 `
+            --prefix="$($PWD.Path)/out" `
+            build
       - name: Build Omen
-        run: ninja install -C build
+        run: meson compile -C build
       - name: Finalize ccache
         run: |
           ccache --show-stats --verbose
@@ -51,4 +53,4 @@ jobs:
             ${{ env.LOCALAPPDATA_DIR }}/ccache
           key: ${{ runner.os }}-release-${{ github.sha }}
       - name: Test Omen
-        run: output/test/omen_test.exe --gtest_color=yes
+        run: meson test -v -C build

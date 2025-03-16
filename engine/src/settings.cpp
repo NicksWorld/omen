@@ -34,10 +34,13 @@ SettingsResult<std::unique_ptr<EngineSettings>> EngineSettings::load() {
 SettingsResult<std::unique_ptr<EngineSettings>>
 EngineSettings::from_toml(std::istream &stream) {
   // Parse the file
-  toml::parse_result settings_raw = toml::parse(stream);
-  if (!settings_raw) {
+  std::optional<toml::parse_result> settings_res;
+  try {
+    settings_res = toml::parse(stream);
+  } catch (...) {
     return SettingsError::Toml;
   }
+  auto settings_raw = settings_res.value();
 
   std::unique_ptr<EngineSettings> engine_settings{new EngineSettings()};
 

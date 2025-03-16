@@ -11,7 +11,7 @@ jobs:
       - name: Install build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake ninja-build gcc g++ ccache
+          sudo apt-get install -y meson ninja-build gcc g++ ccache
       - name: Restore ccache
         uses: actions/cache/restore@v4
         with:
@@ -24,15 +24,15 @@ jobs:
           submodules: recursive
       - name: Configure Omen
         run: |
-          cmake \
-            -S . \
-            -B build \
-            -DOMEN_TEST=ON \
-            -DCMAKE_COLOR_DIAGNOSTICS=ON \
-            -DCMAKE_INSTALL_PREFIX=output \
-            --preset=linux-release
+          meson setup \
+            -Dtests=true \
+            -Dpedantic=true \
+            --werror \
+            --warnlevel=3 \
+            --prefix="${PWD}/out" \
+            build
       - name: Build Omen
-        run: ninja install -C build
+        run: meson compile -C build
       - name: Finalize ccache
         run: |
           ccache --show-stats --verbose
@@ -45,4 +45,4 @@ jobs:
             ~/.cache/ccache
           key: ${{ runner.os }}-release-${{ github.sha }}
       - name: Test Omen
-        run: output/test/omen_test --gtest_color=yes
+        run: meson test -v -C build
