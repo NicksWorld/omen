@@ -26,6 +26,7 @@ if get_option('pedantic')
       '-Woverloaded-virtual',
       '-Wimplicit-fallthrough',
       '-Wcast-align',
+      '-Wsign-compare',
     ),
     language : [ 'c', 'cpp' ],
   )

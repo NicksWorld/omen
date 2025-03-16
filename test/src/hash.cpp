@@ -6,19 +6,19 @@ using omen::hash::hash_value;
 using omen::hash::HashId;
 
 TEST(hash_value, hashString) {
-  EXPECT_EQ(hash_value("Hello, World!"), 0x6ef05bd7cc857c54);
-  EXPECT_EQ(hash_value("core/boot/boot.lua"), 0x5ca5d2cbbd841194);
+  EXPECT_EQ(hash_value("Hello, World!"), 0x6ef05bd7cc857c54u);
+  EXPECT_EQ(hash_value("core/boot/boot.lua"), 0x5ca5d2cbbd841194u);
 }
 
 TEST(hash_value, emptyValue) {
-  EXPECT_EQ(hash_value(nullptr, 0), 0xcbf29ce484222325);
+  EXPECT_EQ(hash_value(nullptr, 0), 0xcbf29ce484222325u);
 }
 
 TEST(HashId, hashString) {
   HashId hash1("Hello, World!");
   HashId hash2("core/boot/boot.lua");
-  EXPECT_EQ(hash1.get(), 0x6ef05bd7cc857c54);
-  EXPECT_EQ(hash2.get(), 0x5ca5d2cbbd841194);
+  EXPECT_EQ(hash1.get(), 0x6ef05bd7cc857c54u);
+  EXPECT_EQ(hash2.get(), 0x5ca5d2cbbd841194u);
 }
 
 TEST(HashId, comparison) {
