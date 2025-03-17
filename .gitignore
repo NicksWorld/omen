@@ -39,3 +39,7 @@ build/
 
 # Artifact directory
 output/
+
+# Meson subprojects
+/subprojects/*
+!/subprojects/*.wrap
