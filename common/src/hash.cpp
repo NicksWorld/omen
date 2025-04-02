@@ -1,4 +1,4 @@
-#include "omen/hash.h"
+#include "omen/hash.hpp"
 
 #include <cstddef>
 #include <cstdint>

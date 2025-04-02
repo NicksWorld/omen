@@ -4,8 +4,8 @@
 #include <utility>
 #include <variant>
 
-#include <omen/application.h>
-#include <omen/settings.h>
+#include <omen/application.hpp>
+#include <omen/settings.hpp>
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char *argv[]) {
   auto engine_settings_res = omen::EngineSettings::load();

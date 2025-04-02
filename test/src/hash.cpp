@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <omen/hash.h>
+#include <omen/hash.hpp>
 
 using omen::hash::hash_value;
 using omen::hash::HashId;

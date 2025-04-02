@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <omen/settings.h>
+#include <omen/settings.hpp>
 #include <sstream>
 #include <variant>
 

@@ -1,4 +1,4 @@
-#include "omen/settings.h"
+#include "omen/settings.hpp"
 
 #include <filesystem>
 #include <fstream>

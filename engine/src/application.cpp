@@ -1,9 +1,9 @@
-#include "omen/application.h"
+#include "omen/application.hpp"
 
 #include <memory>
 #include <utility>
 
-#include "omen/settings.h"
+#include "omen/settings.hpp"
 
 using namespace omen;
 

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "omen/settings.h"
+#include "omen/settings.hpp"
 
 namespace omen {
 /// Core application construct
